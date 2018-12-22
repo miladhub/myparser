@@ -2,6 +2,7 @@ module Lib where
 
 import Text.Trifecta
 import Control.Applicative
+import Control.Monad
 
 one = char '1'
 
@@ -45,13 +46,10 @@ barfoo<EOF>
 
 p123 :: String -> Result Int
 p123 =
-  parseString (read <$> (p3 <|> p2 <|> p1)) mempty
+  parseString (read <$> p123_) mempty
+  where
+    p123_ = string "123" <|> string "12" <|> string "1"
 
-p1 :: Parser String
-p1 = string "1"
+mystring :: String -> Parser String
+mystring s = forM s char
 
-p2 :: Parser String
-p2 = string "12"
-
-p3 :: Parser String
-p3 = string "123"
