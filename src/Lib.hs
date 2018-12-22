@@ -1,8 +1,11 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Lib where
 
 import Text.Trifecta
 import Control.Applicative
 import Control.Monad
+import Data.Ratio ((%))
 
 one = char '1'
 
@@ -52,4 +55,18 @@ p123 =
 
 mystring :: String -> Parser String
 mystring s = forM s char
+
+badFraction = "1/0" 
+alsoBad = "10" 
+shouldWork = "1/2" 
+shouldAlsoWork = "2/1"
+
+parseFraction :: Parser Rational
+parseFraction = do
+  num <- decimal
+  char '/'
+  den <- decimal
+  return (num % den)
+
+parseFraction' = parseString parseFraction mempty
 
