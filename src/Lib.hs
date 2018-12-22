@@ -66,7 +66,9 @@ parseFraction = do
   num <- decimal
   char '/'
   den <- decimal
-  return (num % den)
+  case den of
+    0 -> fail "Denominator is zero"
+    _ -> return (num % den)
 
 parseFraction' = parseString parseFraction mempty
 
