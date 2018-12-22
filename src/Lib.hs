@@ -72,3 +72,8 @@ parseFraction = do
 
 parseFraction' = parseString parseFraction mempty
 
+yourFuncHere :: Parser Integer
+yourFuncHere = do
+  int <- integer
+  eof
+  return int
