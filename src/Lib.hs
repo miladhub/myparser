@@ -71,9 +71,25 @@ parseFraction = do
     _ -> return (num % den)
 
 parseFraction' = parseString parseFraction mempty
-
+{-
 yourFuncHere :: Parser Integer
 yourFuncHere = do
   int <- integer
   eof
   return int
+-}
+yourFuncHere :: Parser Integer
+yourFuncHere = integer <* eof
+
+type NumberOrString =
+  Either Integer String
+
+a = "blah"
+b = "123"
+c = "123blah789"
+
+parseNos :: Parser NumberOrString
+parseNos =
+      (Left <$> integer)
+  <|> (Right <$> some letter)
+
