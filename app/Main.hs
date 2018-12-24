@@ -1,6 +1,7 @@
 module Main where
 
 import Lib
+import ReadIni
 
 main :: IO ()
 main = do
