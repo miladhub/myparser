@@ -34,6 +34,7 @@ testOneEof = do
 
 parseFoo :: String -> Result String
 parseFoo = parseString (string "foo") mempty
+
 {-
 *Main Text.Trifecta> parseFoo "foo"
 Success "foo"
@@ -45,7 +46,6 @@ barfoo<EOF>
 ^           , _errDeltas = [Columns 0 0]})
 *Main Text.Trifecta> 
 -}
-
 
 p123 :: String -> Result Int
 p123 =
@@ -71,6 +71,12 @@ parseFraction = do
     _ -> return (num % den)
 
 parseFraction' = parseString parseFraction mempty
+
+parseDecimalOrFraction :: Parser Rational
+parseDecimalOrFraction =
+      parseFraction
+  <|> (toRational <$> decimal)
+
 {-
 yourFuncHere :: Parser Integer
 yourFuncHere = do
@@ -78,6 +84,7 @@ yourFuncHere = do
   eof
   return int
 -}
+
 yourFuncHere :: Parser Integer
 yourFuncHere = integer <* eof
 
@@ -92,4 +99,16 @@ parseNos :: Parser NumberOrString
 parseNos =
       (Left <$> integer)
   <|> (Right <$> some letter)
+
+data DecOrFrac =
+    Dec Integer
+  | Frac Rational
+  deriving (Eq, Show)
+
+parseDecOrFrac :: Parser DecOrFrac
+parseDecOrFrac =
+      Frac <$> (try parseFraction) 
+  <|> Dec <$> decimal
+
+parseDecOrFrac' = parseString parseDecOrFrac mempty
 
