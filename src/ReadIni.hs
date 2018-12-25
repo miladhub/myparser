@@ -37,10 +37,10 @@ assignmentEx :: ByteString
 assignmentEx = "woot=1"
 
 type Name = String
-type Value = String
-type Assignments = Map Name Value
+type MyValue = String
+type Assignments = Map Name MyValue
 
-parseAssignment :: Parser (Name, Value)
+parseAssignment :: Parser (Name, MyValue)
 parseAssignment = do
   name <- some letter
   _ <- char '='

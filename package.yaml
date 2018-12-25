@@ -28,6 +28,7 @@ dependencies:
 - text
 - hspec
 - raw-strings-qq
+- aeson
 
 library:
   source-dirs: src
