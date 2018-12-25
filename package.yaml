@@ -29,6 +29,7 @@ dependencies:
 - hspec
 - raw-strings-qq
 - aeson
+- scientific
 
 library:
   source-dirs: src

@@ -1,9 +1,10 @@
 module Main where
 
+import Data.Aeson
 import Lib
 import ReadIni
 import Marshalling
-
+{-
 main :: IO ()
 main = do
   pNL "stop:" 
@@ -16,4 +17,7 @@ main = do
   testParse oneTwo 
   pNL "oneTwo':" 
   testParse oneTwo'
+-}
 
+main :: IO ()
+main = mymain
