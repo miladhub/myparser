@@ -84,7 +84,7 @@ instance FromJSON NumberOrString where
 
 -- so it knows what we want to parse
 dec :: ByteString
-    -> Maybe NumberOrString
+    -> Maybe [NumberOrString]
 dec = decode
 
 eitherDec :: ByteString
@@ -95,6 +95,11 @@ mymain :: IO ()
 mymain = do
   print $ dec "blah"
   print $ eitherDec "blah"
+  print $ dec "\"hello there\""
+  print $ dec "1"
+  print $ dec "[42,1,\"foo\"]"
+
+
 {-
  -
 Prelude> :set -XOverloadedStrings
