@@ -99,7 +99,6 @@ mymain = do
   print $ dec "1"
   print $ dec "[42,1,\"foo\"]"
 
-
 {-
  -
 Prelude> :set -XOverloadedStrings
