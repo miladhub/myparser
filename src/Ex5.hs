@@ -26,7 +26,7 @@ parseHourMinuteEntry = do
   _ <- char ':'
   min <- decimal
   _ <- char ' '
-  log <- (intercalate " " . filter (/= "")) <$> sepBy word (char ' ')
+  log <- logWords
   skipOptional parseComment
   return $ HourMinuteEntry hour min log
 
@@ -44,11 +44,14 @@ parseDateEntry = do
 parseComment :: Parser LogEntry
 parseComment = do
   _ <- string "-- "
-  comment <- (intercalate " " . filter (/= "")) <$> sepBy word (char ' ')
+  comment <- logWords
   return $ LogComment comment
 
-word :: Parser String
-word = many alphaNum
+logWords :: Parser String
+logWords = (intercalate " " . filter (/= "")) <$> sepBy logWord (char ' ')
+
+logWord :: Parser String
+logWord = many alphaNum
 
 {-
 log <- readFile "ex5.log"
