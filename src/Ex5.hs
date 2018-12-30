@@ -8,9 +8,16 @@ import Control.Applicative
 import Data.Monoid
 import Data.List
 
+type Year = Integer
+type Month = Integer
+type Day = Integer
+type Hour = Integer
+type Minute = Integer
+type Activity = String
+
 data LogEntry =
-    DateEntry Integer Integer Integer
-  | HourMinuteEntry Integer Integer String
+    DateEntry Year Month Day
+  | HourMinuteEntry Hour Minute Activity
   | LogComment String
   deriving (Show, Eq)
 
