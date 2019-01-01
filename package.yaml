@@ -30,6 +30,7 @@ dependencies:
 - raw-strings-qq
 - aeson
 - scientific
+- mtl
 
 library:
   source-dirs: src
