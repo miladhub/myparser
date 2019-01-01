@@ -83,7 +83,10 @@ parseWord :: Parser String
 parseWord = many anyChar
 
 {-
+import Data.List
+import Text.Trifecta
 sequenceA <$> ((fmap . fmap) (parseString parseLine mempty) $ (filter (/= "") . lines) <$> readFile "ex5.log")
 l = [LogComment "wheee a comment",DateEntry 2025 2 5,HourMinuteEntry 8 0 "Breakfast",HourMinuteEntry 9 0 "Sanitizing moisture collector",HourMinuteEntry 11 0 "Exercising in high-grav gym",HourMinuteEntry 12 0 "Lunch",HourMinuteEntry 13 0 "Programming",HourMinuteEntry 17 0 "Commuting home in rover",HourMinuteEntry 17 30 "R&R",HourMinuteEntry 19 0 "Dinner",HourMinuteEntry 21 0 "Shower",HourMinuteEntry 21 15 "Read",HourMinuteEntry 22 0 "Sleep",DateEntry 2025 2 7,HourMinuteEntry 8 0 "Breakfast",HourMinuteEntry 9 0 "Bumped head, passed out",HourMinuteEntry 13 36 "Wake up, headache",HourMinuteEntry 13 37 "Go to medbay",HourMinuteEntry 13 40 "Patch self up",HourMinuteEntry 13 45 "Commute home for rest",HourMinuteEntry 14 15 "Read",HourMinuteEntry 21 0 "Dinner",HourMinuteEntry 21 15 "Read",HourMinuteEntry 22 0 "Sleep"]
+putStrLn $ intercalate "\n" (show <$> l)
 -}
 
