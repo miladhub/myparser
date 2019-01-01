@@ -24,29 +24,24 @@ data LogEntry =
   | LogComment String
   deriving (Show, Eq)
 
-type When = (Year, Month, Day, Hour, Minute)
-type Start = When
-type End = When
-
-data Duration = Duration Start End
-
 type Date = (Year, Month, Day)
-data ActivitySum =
-  ActivitySum (M.Map Activity Integer)
+type ActivityTime = (Activity, Integer)
+
+data ActivityTimes =
+  ActivityTimes [(Date, [ActivityTime])]
   deriving (Show, Eq)
 
-s :: [LogEntry] -> ActivitySum
-s ls = L.foldl f (ActivitySum $ fromList []) ls
+analyseLog :: [LogEntry] -> ActivityTimes
+analyseLog entries = L.foldl processEntry (ActivityTimes $ []) entries
 
-f :: ActivitySum -> LogEntry -> ActivitySum
-f = undefined
+processEntry :: ActivityTimes -> LogEntry -> ActivityTimes
+processEntry ats (LogComment _) = ats
+processEntry (ActivityTimes ats) (DateEntry yr mon day) = ActivityTimes $ ((yr, mon, day), []) : ats
+processEntry (ActivityTimes ((date, at) : ats)) (HourMinuteEntry hr min act) =
+  ActivityTimes $ (date, (at ++ [(act, activityTime)])) : ats
 
-parseLines :: Parser (Date, [LogEntry])
-parseLines = do
-  (DateEntry yr m d) <- (skipOptional parseComment *> skipOptional newline *> parseDateEntry)
-  logs <- many (skipOptional parseComment *> skipOptional newline *> parseHourMinuteEntry)
-  many (skipOptional newline)
-  return ((yr, m, d), logs)
+activityTime :: Integer
+activityTime = 42
 
 parseLine :: Parser LogEntry
 parseLine =
