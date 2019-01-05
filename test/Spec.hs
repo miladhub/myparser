@@ -30,8 +30,14 @@ main = hspec $ do
       parseEither "# 2020-05-24" `shouldBe` Right (DateEntry 2020 5 24)
     it "parses dates ignoring comments" $ do
       parseEither "# 2020-05-24 -- foo" `shouldBe` Right (DateEntry 2020 5 24)  
+    it "parses log entries" $ do
+      parseEither "13:55 Foo bar" `shouldBe` Right (HourMinuteEntry 13 55 "Foo bar")
+    it "parses log entries with special characters" $ do
+      parseEither "13:55 Foo-bar" `shouldBe` Right (HourMinuteEntry 13 55 "Foo-bar")
     it "parses log entries ignoring comment" $ do
       parseEither "13:55 Foo-bar -- foo" `shouldBe` Right (HourMinuteEntry 13 55 "Foo-bar")
+--    it "handles multiple lines" $ do
+--      parseEither "-- foo\n\n# 2020-05-24\n13:55 Foo\n15:30 Bar\n" 
 
 parseEither :: String -> Either String LogEntry
 parseEither = resultAsEither . parse
