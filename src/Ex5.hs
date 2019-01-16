@@ -29,6 +29,9 @@ data LogsForDate =
   LogsForDate LogDate [LogEntry]
   deriving (Show, Eq)
 
+sortLines :: String -> Either String [LogsForDate]
+sortLines = (fmap sortLogs) . parseLines . lines 
+
 sortLogs :: [LogEntry] -> [LogsForDate]
 sortLogs =
   foldl sortLog []
@@ -57,6 +60,16 @@ logDateTimeToUTC (y, mo, d, h, m) =
   localTimeToUTC utc $ LocalTime
     (fromGregorian y (fromIntegral mo) (fromIntegral d))
     (TimeOfDay (fromIntegral h) (fromIntegral m) 0)
+
+parseLines :: [String] -> Either String [LogEntry]
+parseLines = sequenceA . (fmap parseEither) . (filter (/= "")) 
+
+parseEither :: String -> Either String LogEntry
+parseEither = resultAsEither . (parseString parseLine mempty)
+
+resultAsEither :: Result a -> Either String a
+resultAsEither (Success a) = Right a
+resultAsEither (Failure e) = Left (show e)
 
 parseLine :: Parser LogEntry
 parseLine =
@@ -93,9 +106,5 @@ parseWord :: Parser String
 parseWord = many anyChar
 
 {-
-import Data.List
-import Text.Trifecta
-l = sequenceA <$> ((fmap . fmap) (parseString parseLine mempty) $ (filter (/= "") . lines) <$> readFile "ex5.log")
-s = (fmap . fmap) sortLogs l
+sortLines <$> readFile "ex5.log"
 -}
-
