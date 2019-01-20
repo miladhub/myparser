@@ -29,6 +29,30 @@ data LogsForDate =
   LogsForDate LogDate [LogEntry]
   deriving (Show, Eq)
 
+type LogDateTime = (LogYear, LogMonth, LogDay, LogHour, LogMinute)
+
+data TimedLogEntry =
+  TimedLogEntry LogDateTime LogActivity
+  deriving (Show, Eq)
+
+attachDates :: LogsForDate -> [TimedLogEntry]
+attachDates (LogsForDate d ls) = fmap (attachDate d) ls
+
+attachDate :: LogDate -> LogEntry -> TimedLogEntry
+attachDate (yr, mo, d) (HourMinuteEntry hr min act) = 
+  TimedLogEntry (yr, mo, d, hr, min) act
+-- TODO the other cases cannot happen
+
+diffDates :: LogDateTime -> LogDateTime -> NominalDiffTime
+diffDates d1 d2 =
+  diffUTCTime (logDateTimeToUTC d2) (logDateTimeToUTC d1)
+
+logDateTimeToUTC :: LogDateTime -> UTCTime
+logDateTimeToUTC (y, mo, d, h, m) =
+  localTimeToUTC utc $ LocalTime
+    (fromGregorian y (fromIntegral mo) (fromIntegral d))
+    (TimeOfDay (fromIntegral h) (fromIntegral m) 0)
+
 sortLines :: String -> Either String [LogsForDate]
 sortLines = (fmap sortLogs) . parseLines . lines 
 
@@ -44,22 +68,6 @@ sortLogs =
           (LogsForDate (year, month, day) es) = head rev
           new = LogsForDate (year, month, day) $ es ++ [e]
       in reverse $ new : (tail rev)
-
-type LogDateTime = (LogYear, LogMonth, LogDay, LogHour, LogMinute)
-
-data TimedLogEntry =
-  TimedLogEntry LogDateTime LogActivity
-  deriving (Show, Eq)
-
-diffDates :: LogDateTime -> LogDateTime -> NominalDiffTime
-diffDates d1 d2 =
-  diffUTCTime (logDateTimeToUTC d2) (logDateTimeToUTC d1)
-
-logDateTimeToUTC :: LogDateTime -> UTCTime
-logDateTimeToUTC (y, mo, d, h, m) =
-  localTimeToUTC utc $ LocalTime
-    (fromGregorian y (fromIntegral mo) (fromIntegral d))
-    (TimeOfDay (fromIntegral h) (fromIntegral m) 0)
 
 parseLines :: [String] -> Either String [LogEntry]
 parseLines = sequenceA . (fmap parseEither) . (filter (/= "")) 
@@ -104,7 +112,3 @@ parseComment = do
 
 parseWord :: Parser String
 parseWord = many anyChar
-
-{-
-sortLines <$> readFile "ex5.log"
--}
