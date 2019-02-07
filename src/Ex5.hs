@@ -9,6 +9,7 @@ import Data.Monoid
 import Data.List
 import Data.Text (pack, strip, unpack)
 import Data.Time (fromGregorian, NominalDiffTime, localTimeToUTC, utc, LocalTime(..), TimeOfDay(..), diffUTCTime, UTCTime)
+import Data.Map (Map, fromList)
 
 type LogYear = Integer
 type LogMonth = Integer
@@ -34,6 +35,13 @@ type LogDateTime = (LogYear, LogMonth, LogDay, LogHour, LogMinute)
 data TimedLogEntry =
   TimedLogEntry LogDateTime LogActivity
   deriving (Show, Eq)
+
+sumActivities :: [TimedLogEntry] -> [(LogActivity, NominalDiffTime)]
+sumActivities (f : s : t) = f `diffEntries` s : sumActivities (s : t)
+sumActivities _ = []
+
+diffEntries :: TimedLogEntry -> TimedLogEntry -> (LogActivity, NominalDiffTime)
+diffEntries = undefined
 
 attachDates :: LogsForDate -> [TimedLogEntry]
 attachDates (LogsForDate d ls) = fmap (attachDate d) ls

@@ -5,6 +5,7 @@ import Test.Hspec
 import Control.Exception (evaluate)
 import Ex1
 import Ex5
+import Data.Map
 
 main :: IO ()
 main = hspec $ do
@@ -52,6 +53,12 @@ main = hspec $ do
       attachDates (LogsForDate (2020,5,24) [HourMinuteEntry 13 55 "Foo", HourMinuteEntry 15 30 "Bar"])
       `shouldBe`
       [TimedLogEntry (2020, 5, 24, 13, 55) "Foo", TimedLogEntry (2020, 5, 24, 15, 30) "Bar"]
+  describe "timed log entry sum" $ do
+    it "yields zero on empty list" $ do
+      sumActivities [] `shouldBe` []
+    it "counts time between entries" $ do
+      sumActivities [TimedLogEntry (2020, 5, 24, 13, 55) "Foo", TimedLogEntry (2020, 5, 24, 15, 30) "Bar"] `shouldBe`
+        [("Foo", ]
 
 checkLessThan :: String -> String -> Bool
 checkLessThan f s =
