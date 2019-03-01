@@ -36,9 +36,12 @@ data TimedLogEntry =
   TimedLogEntry LogDateTime LogActivity
   deriving (Show, Eq)
 
-sumActivities :: [TimedLogEntry] -> [(LogActivity, NominalDiffTime)]
-sumActivities (f : s : t) = f `diffEntries` s : sumActivities (s : t)
-sumActivities _ = []
+activities :: String -> Either String [(LogActivity, NominalDiffTime)]
+activities s = measureActivities <$> (>>= attachDates) <$> sortLines s
+
+measureActivities :: [TimedLogEntry] -> [(LogActivity, NominalDiffTime)]
+measureActivities (f : s : t) = f `diffEntries` s : measureActivities (s : t)
+measureActivities _ = []
 
 diffEntries :: TimedLogEntry -> TimedLogEntry -> (LogActivity, NominalDiffTime)
 diffEntries (TimedLogEntry d1 a) (TimedLogEntry d2 _) = (a, diffDates d1 d2)

@@ -51,13 +51,13 @@ main = hspec $ do
       attachDates (LogsForDate (2020,5,24) [HourMinuteEntry 13 55 "Foo", HourMinuteEntry 15 30 "Bar"])
       `shouldBe`
       [TimedLogEntry (2020, 5, 24, 13, 55) "Foo", TimedLogEntry (2020, 5, 24, 15, 30) "Bar"]
-  describe "timed log entry sum" $ do
+  describe "timed log entry measurement" $ do
     it "yields zero on empty list" $ do
-      sumActivities [] `shouldBe` []
+      measureActivities [] `shouldBe` []
     it "yields zero on 1-sized list" $ do
-      sumActivities [TimedLogEntry (2020, 5, 24, 13, 55) "Foo"] `shouldBe` []
+      measureActivities [TimedLogEntry (2020, 5, 24, 13, 55) "Foo"] `shouldBe` []
     it "counts time between entries" $ do
-      sumActivities [TimedLogEntry (2020, 5, 24, 13, 30) "Foo", TimedLogEntry (2020, 5, 24, 14, 00) "Bar"] `shouldBe`
+      measureActivities [TimedLogEntry (2020, 5, 24, 13, 30) "Foo", TimedLogEntry (2020, 5, 24, 14, 00) "Bar"] `shouldBe`
         [("Foo", d (30 * 60))]
 
 wholeLog :: String
