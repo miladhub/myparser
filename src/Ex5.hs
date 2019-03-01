@@ -41,7 +41,7 @@ sumActivities (f : s : t) = f `diffEntries` s : sumActivities (s : t)
 sumActivities _ = []
 
 diffEntries :: TimedLogEntry -> TimedLogEntry -> (LogActivity, NominalDiffTime)
-diffEntries = undefined
+diffEntries (TimedLogEntry d1 a) (TimedLogEntry d2 _) = (a, diffDates d1 d2)
 
 attachDates :: LogsForDate -> [TimedLogEntry]
 attachDates (LogsForDate d ls) = fmap (attachDate d) ls
