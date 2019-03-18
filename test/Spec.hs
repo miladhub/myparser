@@ -1,5 +1,3 @@
---module Tests where
-
 import Text.Trifecta
 import Test.Hspec
 import Control.Exception (evaluate)
